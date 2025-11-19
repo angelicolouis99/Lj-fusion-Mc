@@ -1,140 +1,25 @@
-<!doctype html>
-<html lang="fr">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LJFUSION — Black & Gold Edition</title>
-<link rel="icon" href="assets/ljfusion-logo.png">
-<link rel="stylesheet" href="style.css">
+<meta charset='UTF-8'>
+<title>LJFUSION</title>
+<link rel='stylesheet' href='style.css'>
 </head>
 <body>
-<div id="splash">
-  <div class="slogo">LJ</div>
-  <div style="margin-top:12px;color:var(--muted)">LJFUSION — Loading…</div>
-  <div class="loader"><i></i></div>
+
+<div id='login-box'>
+<h2>LJFUSION</h2>
+<input id='email' placeholder='Email'>
+<input id='password' type='password' placeholder='Mot de passe'>
+<button onclick='login()'>Login</button>
+<p id='error'></p>
 </div>
 
-<div class="app" style="display:none">
-  <aside class="sidebar" role="navigation" aria-label="Main">
-    <div class="brand">
-      <div class="logo"><img src="assets/ljfusion-logo.png" alt="logo"></div>
-      <div><h1>LJFUSION</h1><div style="color:var(--muted);font-size:12px">Black & Gold</div></div>
-    </div>
-    <nav class="nav" id="nav">
-      <button data-page="home" class="active">🏠 Accueil</button>
-      <button data-page="admin">🛡️ Admin</button>
-      <button data-page="employee">👨‍💼 Mpiasa</button>
-      <button data-page="messages">💬 Messagerie</button>
-      <button data-page="planning">📅 Planning</button>
-      <button data-page="profil">👤 Profil</button>
-      <button data-page="settings">⚙️ Paramètres</button>
-    </nav>
-    <div class="side-meta">
-      <div style="font-weight:800" id="sideUser">Non connecté</div>
-      <div class="small" style="margin-top:6px;color:var(--muted)">LJFUSION © <span id="year"></span></div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="topbar">
-      <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><input id="search" placeholder="Rechercher..."></div>
-      <div class="actions"><div id="notif" style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);">🔔</div></div>
-    </div>
-
-    <section class="content" id="content">
-      <div class="card" id="page-home" style="grid-column:span 12">
-        <div class="header"><div><div style="font-weight:800">Bienvenue — LJFUSION</div><div style="color:var(--muted)">Black & Gold Edition</div></div></div>
-        <div class="cols-2">
-          <div>
-            <div style="display:flex;gap:12px;margin-bottom:12px">
-              <div class="stat"><div class="small">Total Mpiasa</div><div style="font-weight:800;font-size:20px" id="statEmployees">0</div></div>
-              <div class="stat"><div class="small">Total Bonus</div><div style="font-weight:800;font-size:20px" id="statBonus">0 Ar</div></div>
-              <div class="stat"><div class="small">Performance</div><div style="font-weight:800;font-size:20px" id="statPerf">—</div></div>
-            </div>
-            <div class="card" style="padding:12px">
-              <div style="font-weight:800;color:var(--gold2);margin-bottom:8px">Liste Mpiasa</div>
-              <ul class="employee-list" id="employeeList"></ul>
-            </div>
-          </div>
-          <aside>
-            <div class="card" style="padding:12px">
-              <div style="font-weight:800;color:var(--gold2)">Annonce</div>
-              <div class="small" style="margin-top:8px">Mpiasa tsara indrindra: <b id="winner">—</b></div>
-            </div>
-            <div class="card" style="padding:12px;margin-top:12px">
-              <div style="font-weight:800;color:var(--gold2)">Présence</div>
-              <div id="presenceNow" style="margin-top:8px">—</div>
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      <div class="card" id="page-admin" style="grid-column:span 6; display:none">
-        <div class="header"><div style="font-weight:800">Admin — Gestionnaire</div></div>
-        <div style="margin-bottom:12px;display:flex;gap:8px">
-          <button class="btn" id="btnAddEmp">Ajouter Mpiasa</button>
-          <button class="btn" id="btnExportUsers">Exporter CSV</button>
-        </div>
-        <table class="table" style="width:100%"><thead><tr><th>Nom</th><th>Email</th><th>Role</th><th>Points</th><th>Bonus</th><th>Action</th></tr></thead><tbody id="adminTable"></tbody></table>
-      </div>
-
-      <div class="card" id="page-employee" style="grid-column:span 6; display:none">
-        <div style="font-weight:800">Dashboard Mpiasa</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="card"><div class="small">Andro iasana</div><div id="empDays" style="font-weight:800">0</div></div>
-          <div class="card"><div class="small">Points</div><div id="empPoints" style="font-weight:800">0</div></div>
-        </div>
-      </div>
-
-      <div class="card" id="page-messages" style="grid-column:span 6; display:none">
-        <div style="font-weight:800">Messagerie</div>
-        <div class="chat-window">
-          <div class="messages" id="messages"></div>
-          <div class="chat-input">
-            <input id="chatText" class="input" placeholder="Écrire un message...">
-            <button class="btn" id="sendBtn">Envoyer</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="page-planning" style="grid-column:span 6; display:none">
-        <div style="font-weight:800">Planning (08:00 → 19:00)</div>
-        <div style="display:flex;gap:12px">
-          <table class="table" style="width:60%"><thead><tr><th>Jour</th><th>Heure</th></tr></thead><tbody id="planningTable"></tbody></table>
-          <div style="flex:1">
-            <div style="font-weight:800;color:var(--gold2)">Heatmap</div>
-            <div class="heat-grid" id="heatGrid"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="page-profil" style="grid-column:span 4; display:none">
-        <div style="font-weight:800">Profil</div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <div id="profileAvatar" style="width:76px;height:76px;border-radius:12px;background:linear-gradient(135deg,var(--gold3),var(--gold2));display:flex;align-items:center;justify-content:center;color:#08110b;font-weight:900">A</div>
-          <div>
-            <div id="profileName" style="font-weight:800">—</div>
-            <div id="profileRole" class="small">—</div>
-            <div style="margin-top:8px" class="small">Badges: <span class="badge">🏆</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="page-settings" style="grid-column:span 4; display:none">
-        <div style="font-weight:800">Paramètres</div>
-        <div class="form-row">
-          <label class="small">Changer le thème</label>
-          <select id="themeSel" class="input-sm"><option value="gold">Gold</option><option value="dark">Dark</option></select>
-          <label class="small">Changer le mot de passe (Admin)</label>
-          <input id="newPass" class="input-sm" placeholder="Nouveau mot de passe">
-          <button class="btn" id="saveSettings">Enregistrer</button>
-        </div>
-      </div>
-
-    </section>
-  </main>
+<div id='dashboard' class='hidden'>
+<h1>Dashboard LJFUSION</h1>
+<p>Bienvenue Admin</p>
 </div>
 
-<script src="script.js"></script>
+<script src='script.js'></script>
 </body>
 </html>
