@@ -1,25 +1,70 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='UTF-8'>
-<title>LJFUSION</title>
-<link rel='stylesheet' href='style.css'>
-</head>
-<body>
+<!doctype html><html lang='fr'><head><meta charset='utf-8'/><meta name='viewport' content='width=device-width,initial-scale=1'/><title>LJFUSION</title><link rel='icon' href='assets/ljfusion-logo.png'><link rel='manifest' href='manifest.json'><link rel='stylesheet' href='style.css'></head><body>
+<div id='splash' class='splash'><div class='slogo'>LJ</div></div>
 
-<div id='login-box'>
-<h2>LJFUSION</h2>
-<input id='email' placeholder='Email'>
-<input id='password' type='password' placeholder='Mot de passe'>
-<button onclick='login()'>Login</button>
-<p id='error'></p>
+<div id='loginModal' class='modal' aria-hidden='true'>
+  <div class='card login-card' role='dialog'>
+    <div class='brand-row'><img src='assets/ljfusion-logo.png' class='logo-small' alt='logo'><div><h2>LJFUSION — Connexion</h2><div class='muted'>Entrez vos identifiants</div></div></div>
+    <label>Email / Identifiant</label>
+    <input id='loginEmail' type='email' placeholder='admin@ljfusion.com'>
+    <label>Mot de passe</label>
+    <input id='loginPassword' type='password' placeholder='••••••••'>
+    <label>Rôle</label>
+    <select id='loginRole'><option value='admin'>Admin</option><option value='employee'>Mpiasa</option></select>
+    <div class='row'><button id='loginBtn' class='btn primary'>Se connecter</button><button id='forgotBtn' class='btn ghost'>Mot de passe oublié</button></div>
+    <div id='loginError' class='error'></div>
+  </div>
 </div>
 
-<div id='dashboard' class='hidden'>
-<h1>Dashboard LJFUSION</h1>
-<p>Bienvenue Admin</p>
-</div>
+<div class='app' aria-hidden='true'>
+  <aside class='sidebar' role='navigation'>
+    <div class='brand'><div class='logo-wrap'><img src='assets/ljfusion-logo.png' alt='logo'></div><div><h1>LJFUSION</h1><small class='muted'>Black + Gold</small></div></div>
+    <nav class='nav' id='nav'>
+      <button data-page='home' class='active'>🏠 Accueil</button>
+      <button data-page='admin'>🛡️ Admin</button>
+      <button data-page='employee'>👨‍💼 Mpiasa</button>
+      <button data-page='messages'>💬 Messagerie</button>
+      <button data-page='planning'>📅 Planning</button>
+      <button data-page='profil'>👤 Profil</button>
+      <button data-page='settings'>⚙️ Paramètres</button>
+    </nav>
+    <div class='side-meta'><div id='sideUser'>Non connecté</div><small class='muted'>LJFUSION © <span id='year'></span></small><button id='logoutBtn' class='btn ghost'>Se déconnecter</button></div>
+  </aside>
 
+  <main class='main'>
+    <div class='topbar'><div class='search'><input id='searchInput' placeholder='Rechercher employé, id...'></div><div class='actions'><button id='notifBtn' class='icon'>🔔<span id='notifBadge' class='badge hidden'>0</span></button></div></div>
+    <section class='content' id='content'>
+      <div id='page-home' class='card page'>
+        <div class='h1'>Bienvenue — LJFUSION</div>
+        <div class='cols'>
+          <div>
+            <div class='stats-row'>
+              <div class='stat'><div class='muted'>Total Mpiasa</div><div id='statEmployees' class='big'>0</div></div>
+              <div class='stat'><div class='muted'>Total Bonus</div><div id='statBonus' class='big'>0 Ar</div></div>
+              <div class='stat'><div class='muted'>Performance</div><div id='statPerf' class='big'>—</div></div>
+            </div>
+            <div class='card small'><div class='muted'>Liste Mpiasa</div><ul id='employeeList' class='employee-list'></ul></div>
+          </div>
+          <aside>
+            <div class='card small'><div class='muted'>Annonce</div><div id='winner' class='big'>—</div></div>
+            <div class='card small'><div class='muted'>Présence</div><div id='presenceNow'>—</div></div>
+          </aside>
+        </div>
+      </div>
+
+      <div id='page-admin' class='card page hidden'><div class='h1'>Admin — Gestion</div><div class='row'><button id='btnAddEmp' class='btn'>Ajouter Mpiasa</button><button id='btnExportUsers' class='btn ghost'>Exporter CSV</button></div><table class='table'><thead><tr><th>Nom</th><th>Email</th><th>Role</th><th>Points</th><th>Bonus</th><th>Action</th></tr></thead><tbody id='adminTable'></tbody></table></div>
+
+      <div id='page-employee' class='card page hidden'><div class='h1'>Dashboard Mpiasa</div><div class='cols-2'><div class='card small'><div class='muted'>Andro iasana</div><div id='empDays' class='big'>0</div></div><div class='card small'><div class='muted'>Points</div><div id='empPoints' class='big'>0</div></div></div></div>
+
+      <div id='page-messages' class='card page hidden'><div class='h1'>Messagerie</div><div class='chat-window'><div id='messages' class='messages' role='log'></div><div class='chat-input'><input id='chatText' class='input' placeholder='Écrire un message...'><button id='sendBtn' class='btn'>Envoyer</button></div></div></div>
+
+      <div id='page-planning' class='card page hidden'><div class='h1'>Planning (08:00 → 19:00)</div><div class='planning-row'><table class='table'><thead><tr><th>Jour</th><th>Heure</th></tr></thead><tbody id='planningTable'></tbody></table><div class='heat-grid' id='heatGrid'></div></div></div>
+
+      <div id='page-profil' class='card page hidden'><div class='h1'>Profil</div><div class='profile-row'><div id='profileAvatar' class='avatar'>A</div><div><div id='profileName' class='big'>—</div><div id='profileRole' class='muted'>—</div></div></div></div>
+
+      <div id='page-settings' class='card page hidden'><div class='h1'>Paramètres</div><div class='form-row'><label>Changer le thème</label><select id='themeSel'><option value='gold'>Gold</option><option value='dark'>Dark</option></select><label>Changer mot de passe</label><input id='newPass' type='password' placeholder='••••••'><button id='saveSettings' class='btn'>Enregistrer</button></div></div>
+
+    </section>
+  </main>
+</div>
 <script src='script.js'></script>
-</body>
-</html>
+</body></html>
